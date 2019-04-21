@@ -6,6 +6,7 @@ jobs:
         - master
         - develop
         - /feature-.*/
+        
     docker:
       - image: circleci/node:11.9.0
 
@@ -25,4 +26,4 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
 
       - run: echo $SERVICE_ACCOUNT | base64 --decode > ${HOME}/serviceAccountKey.json
-      - run: npm run deploy:ci 
+      - run: npm run deploy:ci
