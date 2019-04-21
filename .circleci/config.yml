@@ -6,6 +6,7 @@ jobs:
         - master
         - develop
         - /feature-.*/
+        
     docker:
       - image: circleci/node:11.9.0
 
@@ -27,4 +28,4 @@ jobs:
       - run: echo $SERVICE_ACCOUNT | base64 --decode > ${HOME}/serviceAccountKey.json
       - run: echo ${HOME}
       - run: pwd
-      - run: npm run deploy:ci 
+      - run: npm run deploy:ci
