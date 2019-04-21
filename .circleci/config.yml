@@ -25,4 +25,6 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
 
       - run: echo $SERVICE_ACCOUNT | base64 --decode > ${HOME}/serviceAccountKey.json
+      - run: echo ${HOME}
+      - run: pwd
       - run: npm run deploy:ci 
