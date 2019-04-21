@@ -25,5 +25,5 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
-      - run: echo $SERVICE_ACCOUNT | base64 --decode > ${HOME}/serviceAccountKey.json
-      - run: npm run build:ssr 
+      - run: echo $SERVICE_ACCOUNT | base64 --decode > /home/circleci/project/serviceAccountKey.json
+      - run: npm run deploy:ci
