@@ -39,7 +39,7 @@ export const liveLastCommand
             const command = context.params.channelCollections === "commands"
             const last = context.params.commandId === "last"
 
-            if (data == undefined || !command || !last)
+            if (data === undefined || !command || !last)
                 return null
 
             const timestamp = data.timestamp

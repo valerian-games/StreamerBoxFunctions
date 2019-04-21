@@ -6,6 +6,7 @@
 typings/
 
 node_modules/
+serviceAccountKey.json
 
 # Logs
 logs
