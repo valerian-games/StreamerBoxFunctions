@@ -59,7 +59,7 @@ export const oAuthRedirect = functions.https.onRequest((req, res) => {
     }
     let endpoint = base + qs.stringify(queryParams)
 
-    endpoint += '&scope=user:read:email+channel:read:subscriptions'
+    endpoint += '&scope=user:read:email+channel:read:subscriptions+channel:moderate'
 
     res.redirect(endpoint);
 })
