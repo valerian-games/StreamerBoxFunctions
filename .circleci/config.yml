@@ -4,8 +4,6 @@ jobs:
     branches:
       ignore:
         - master
-        - develop
-        - /feature-.*/
         
     docker:
       - image: circleci/node:11.9.0
