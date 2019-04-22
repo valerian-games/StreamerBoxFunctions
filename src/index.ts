@@ -150,8 +150,16 @@ async function mintAuthToken(req: functions.https.Request, unity: boolean = fals
         offlinePhotoURL: user.offline_image_url
     }
 
-    await db.doc(`channels/${uid}`).set(userData, { merge: true })
-    await db.doc(`twitchTokens/${uid}`).set({ accessToken, refreshToken }, { merge: true })
+    const refChannel = db.doc(`channels/${uid}`)
+    const channel = await refChannel.get()
+
+    if (!channel.exists)
+        await refChannel.set(userData, { merge: true })
+
+    if (unity)
+        await db.doc(`twitchTokensUnity/${uid}`).set({ accessToken, refreshToken }, { merge: true })
+    else
+        await db.doc(`twitchTokens/${uid}`).set({ accessToken, refreshToken }, { merge: true })
 
     return authToken
 }
