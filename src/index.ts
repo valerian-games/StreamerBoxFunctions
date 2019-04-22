@@ -77,7 +77,7 @@ export const oAuthRedirectUnity = functions.https.onRequest((req, res) => {
     const base = 'https://id.twitch.tv/oauth2/authorize?';
 
     const queryParams = {
-        ...defaultParams,
+        ...unityDefaultParams,
         response_type: 'code',
         state: crypto.randomBytes(20).toString('hex')
     }
