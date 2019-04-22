@@ -19,14 +19,23 @@ import CORS = require('cors');
 const cors = CORS({ origin: true })
 
 const redirect_uri = 'http://localhost:4200/c/redirect'
+const redirect_uri_unity = 'https://valerian-games-dev.firebaseapp.com/c/unity'
 
 const firebaseConfig = functions.config()
 const client_id = firebaseConfig.twitch.id;
 const client_secret = firebaseConfig.twitch.secret;
 
+const unity_client_id = firebaseConfig.unity_twitch.id;
+const unity_client_secret = firebaseConfig.unity_twitch.secret;
+
 const defaultParams = {
     client_id,
     redirect_uri
+}
+
+const unityDefaultParams = {
+    client_id: unity_client_id,
+    redirect_uri: redirect_uri_unity
 }
 
 export const liveLastCommand
@@ -64,6 +73,21 @@ export const oAuthRedirect = functions.https.onRequest((req, res) => {
     res.redirect(endpoint);
 })
 
+export const oAuthRedirectUnity = functions.https.onRequest((req, res) => {
+    const base = 'https://id.twitch.tv/oauth2/authorize?';
+
+    const queryParams = {
+        ...defaultParams,
+        response_type: 'code',
+        state: crypto.randomBytes(20).toString('hex')
+    }
+    let endpoint = base + qs.stringify(queryParams)
+
+    endpoint += '&scope=user:read:email+channel:read:subscriptions'
+
+    res.redirect(endpoint);
+})
+
 export const token = functions.https.onRequest((req, res) => {
     cors(req, res, () => {
 
@@ -74,14 +98,33 @@ export const token = functions.https.onRequest((req, res) => {
     });
 });
 
-async function mintAuthToken(req: functions.https.Request): Promise<string> {
+export const tokenUnity = functions.https.onRequest((req, res) => {
+    cors(req, res, () => {
+
+        return mintAuthToken(req, true)
+            .then(authToken => res.json({ authToken }))
+            .catch(err => console.log(err))
+
+    });
+});
+
+async function mintAuthToken(req: functions.https.Request, unity: boolean = false): Promise<string> {
     const base = 'https://id.twitch.tv/oauth2/token?'
 
-    const queryParams = {
+    let queryParams = {
         ...defaultParams,
         client_secret,
         grant_type: 'authorization_code',
         code: req.query.code
+    }
+
+    if (unity) {
+        queryParams = {
+            ...unityDefaultParams,
+            client_secret: unity_client_secret,
+            grant_type: 'authorization_code',
+            code: req.query.code
+        }
     }
 
     const endpoint = base + qs.stringify(queryParams)
